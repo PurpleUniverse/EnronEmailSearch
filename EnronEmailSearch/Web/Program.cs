@@ -1,6 +1,7 @@
 ﻿using EnronEmailSearch.Core.Interfaces;
 using EnronEmailSearch.Core.Services;
 using EnronEmailSearch.Infrastructure.Data;
+using EnronEmailSearch.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Prometheus;
 using Serilog;
@@ -26,14 +27,32 @@ builder.Services.AddDbContext<EnronDbContext>(options =>
 
 // Add services
 builder.Services.AddTransient<IEmailCleaner, EmailCleaner>();
-builder.Services.AddTransient<IEmailIndexer, EmailIndexer>();
+builder.Services.AddTransient<EmailIndexer>();
+builder.Services.AddTransient<IEmailIndexer, ResilientEmailIndexer>();
+
+// Add resilience services
+builder.Services.AddResilienceServices();
 
 // Add controllers and views
 builder.Services.AddControllersWithViews();
 
 // Add health checks
 builder.Services.AddHealthChecks()
-    .AddDbContextCheck<EnronDbContext>()
+    // Custom DB check instead of AddDbContextCheck due to NuGet package not available
+    .AddCheck("Database", () => 
+    {
+        try 
+        {
+            using var scope = builder.Services.BuildServiceProvider().CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<EnronDbContext>();
+            dbContext.Database.ExecuteSqlRaw("SELECT 1");
+            return Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy();
+        }
+        catch (Exception ex)
+        {
+            return Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Unhealthy(ex.Message);
+        }
+    })
     .ForwardToPrometheus();
 
 var app = builder.Build();

@@ -1,11 +1,7 @@
 ﻿using System.Data.Common;
 using Microsoft.Data.Sqlite;
-using Microsoft.Extensions.Logging;
 using Polly;
-using Polly.CircuitBreaker;
-using Polly.Retry;
-using Polly.Timeout;
-using Polly.Wrap;
+
 
 namespace EnronEmailSearch.Infrastructure.Services
 {
@@ -30,9 +26,9 @@ namespace EnronEmailSearch.Infrastructure.Services
     public class ResilienceService : IResilienceService
     {
         private readonly ILogger<ResilienceService> _logger;
-        private readonly AsyncPolicyWrap _databasePolicy;
-        private readonly AsyncPolicyWrap _filePolicy;
-        private readonly AsyncPolicyWrap _searchPolicy;
+        private readonly IAsyncPolicy _databasePolicy;
+        private readonly IAsyncPolicy _filePolicy;
+        private readonly IAsyncPolicy _searchPolicy;
         
         public ResilienceService(ILogger<ResilienceService> logger)
         {
@@ -46,10 +42,9 @@ namespace EnronEmailSearch.Infrastructure.Services
                 .WaitAndRetryAsync(
                     3,
                     attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
-                    (ex, timeSpan, retryCount, context) =>
+                    (ex, timeSpan, retryCount, _) =>
                     {
-                        _logger.LogWarning(ex, 
-                            "Database operation failed. Retrying in {RetryTimeSpan}s. Retry attempt {RetryCount}",
+                        _logger.LogWarning("Database operation failed. Retrying in {RetryTimeSpan}s. Retry attempt {RetryCount}", 
                             timeSpan.TotalSeconds, retryCount);
                     });
             
@@ -59,27 +54,17 @@ namespace EnronEmailSearch.Infrastructure.Services
                 .CircuitBreakerAsync(
                     exceptionsAllowedBeforeBreaking: 5,
                     durationOfBreak: TimeSpan.FromSeconds(30),
-                    onBreak: (ex, breakDuration) =>
+                    onBreak: (ex, _) =>
                     {
-                        _logger.LogError(ex, 
-                            "Circuit breaker opened for database operations. Breaking for {BreakDuration}s",
-                            breakDuration.TotalSeconds);
+                        _logger.LogError(ex, "Circuit breaker opened for database operations");
                     },
                     onReset: () =>
                     {
                         _logger.LogInformation("Circuit breaker reset for database operations");
-                    },
-                    onHalfOpen: () =>
-                    {
-                        _logger.LogInformation("Circuit breaker half-open for database operations");
                     });
             
-            var dbTimeoutPolicy = Policy
-                .TimeoutAsync(10, TimeoutStrategy.Pessimistic, (context, timespan, task) =>
-                {
-                    _logger.LogWarning("Database operation timed out after {Timespan}s", timespan.TotalSeconds);
-                    return Task.CompletedTask;
-                });
+            // Simple timeout policy
+            var dbTimeoutPolicy = Policy.TimeoutAsync(10);
             
             _databasePolicy = Policy.WrapAsync(dbRetryPolicy, dbCircuitBreakerPolicy, dbTimeoutPolicy);
             
@@ -90,64 +75,54 @@ namespace EnronEmailSearch.Infrastructure.Services
                 .WaitAndRetryAsync(
                     3,
                     attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
-                    (ex, timeSpan, retryCount, context) =>
+                    (ex, timeSpan, retryCount, _) =>
                     {
-                        _logger.LogWarning(ex, 
-                            "File operation failed. Retrying in {RetryTimeSpan}s. Retry attempt {RetryCount}",
+                        _logger.LogWarning(ex, "File operation failed. Retrying in {RetryTimeSpan}s. Retry attempt {RetryCount}",
                             timeSpan.TotalSeconds, retryCount);
                     });
             
-            var fileTimeoutPolicy = Policy
-                .TimeoutAsync(5, TimeoutStrategy.Pessimistic);
+            // Simple timeout policy
+            var fileTimeoutPolicy = Policy.TimeoutAsync(5);
             
             _filePolicy = Policy.WrapAsync(fileRetryPolicy, fileTimeoutPolicy);
             
             // Configure search resilience policy
             var searchRetryPolicy = Policy
                 .Handle<Exception>()
-                .OrResult<object>(result => result == null)
                 .WaitAndRetryAsync(
                     2,
                     attempt => TimeSpan.FromMilliseconds(50 * attempt),
-                    (ex, timeSpan, retryCount, context) =>
+                    (ex, timeSpan, retryCount, _) =>
                     {
-                        _logger.LogWarning(ex?.Exception, 
-                            "Search operation failed. Retrying in {RetryTimeSpan}ms. Retry attempt {RetryCount}",
+                        _logger.LogWarning(ex, "Search operation failed. Retrying in {RetryTimeSpan}ms. Retry attempt {RetryCount}",
                             timeSpan.TotalMilliseconds, retryCount);
                     });
             
-            var searchTimeoutPolicy = Policy
-                .TimeoutAsync(3, TimeoutStrategy.Pessimistic);
+            // Simple timeout policy
+            var searchTimeoutPolicy = Policy.TimeoutAsync(3);
             
-            var searchBulkheadPolicy = Policy
-                .BulkheadAsync(10, 100, onBulkheadRejectedAsync: context =>
-                {
-                    _logger.LogWarning("Search request rejected due to bulkhead overflow");
-                    return Task.CompletedTask;
-                });
-            
-            _searchPolicy = Policy.WrapAsync(searchRetryPolicy, searchTimeoutPolicy, searchBulkheadPolicy);
+            _searchPolicy = Policy.WrapAsync(searchRetryPolicy, searchTimeoutPolicy);
         }
         
-        public Task<T> ExecuteDatabaseOperationAsync<T>(Func<CancellationToken, Task<T>> operation, CancellationToken cancellationToken = default)
+        public async Task<T> ExecuteDatabaseOperationAsync<T>(Func<CancellationToken, Task<T>> operation, CancellationToken cancellationToken = default)
         {
-            return _databasePolicy.ExecuteAsync(
-                async ct => await operation(ct),
-                cancellationToken);
+            return await _databasePolicy.ExecuteAsync(
+                async (ctx) => await operation(cancellationToken), 
+                new Context("DatabaseOperation"));
         }
         
-        public Task<T> ExecuteFileOperationAsync<T>(Func<CancellationToken, Task<T>> operation, CancellationToken cancellationToken = default)
+        public async Task<T> ExecuteFileOperationAsync<T>(Func<CancellationToken, Task<T>> operation, CancellationToken cancellationToken = default)
         {
-            return _filePolicy.ExecuteAsync(
-                async ct => await operation(ct),
-                cancellationToken);
+            return await _filePolicy.ExecuteAsync(
+                async (ctx) => await operation(cancellationToken), 
+                new Context("FileOperation"));
         }
         
-        public Task<T> ExecuteSearchOperationAsync<T>(Func<CancellationToken, Task<T>> operation, CancellationToken cancellationToken = default)
+        public async Task<T> ExecuteSearchOperationAsync<T>(Func<CancellationToken, Task<T>> operation, CancellationToken cancellationToken = default)
         {
-            return _searchPolicy.ExecuteAsync(
-                async ct => await operation(ct),
-                cancellationToken);
+            return await _searchPolicy.ExecuteAsync(
+                async (ctx) => await operation(cancellationToken), 
+                new Context("SearchOperation"));
         }
     }
     

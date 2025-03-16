@@ -26,22 +26,6 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\dpetk\RiderProjects\EnronEmailSearch\EnronEmailSearch
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/dpetk/RiderProjects/EnronEmailSearch/EnronEmailSearch/.temp/Views/Home/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = 
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/dpetk/RiderProjects/EnronEmailSearch/EnronEmailSearch/.temp/Views/Home/Privacy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = 
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/dpetk/RiderProjects/EnronEmailSearch/EnronEmailSearch/.temp/Views/_ViewImports.cshtml]
-build_metadata.AdditionalFiles.TargetPath = 
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/dpetk/RiderProjects/EnronEmailSearch/EnronEmailSearch/.temp/Views/_ViewStart.cshtml]
-build_metadata.AdditionalFiles.TargetPath = 
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/dpetk/RiderProjects/EnronEmailSearch/EnronEmailSearch/Web/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = 
 build_metadata.AdditionalFiles.CssScope = 

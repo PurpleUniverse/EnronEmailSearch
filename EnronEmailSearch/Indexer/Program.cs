@@ -2,9 +2,8 @@
 using EnronEmailSearch.Core.Interfaces;
 using EnronEmailSearch.Core.Services;
 using EnronEmailSearch.Infrastructure.Data;
+using EnronEmailSearch.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace EnronEmailSearch.Indexer
@@ -49,7 +48,7 @@ namespace EnronEmailSearch.Indexer
             }
             finally
             {
-                Log.CloseAndFlush();
+                await Log.CloseAndFlushAsync();
             }
         }
 
@@ -81,7 +80,11 @@ namespace EnronEmailSearch.Indexer
 
             // Add services
             services.AddTransient<IEmailCleaner, EmailCleaner>();
-            services.AddTransient<IEmailIndexer, EmailIndexer>();
+            services.AddTransient<EmailIndexer>();
+            services.AddTransient<IEmailIndexer, ResilientEmailIndexer>();
+            
+            // Add resilience services
+            services.AddResilienceServices();
 
             // Build service provider
             var serviceProvider = services.BuildServiceProvider();
@@ -119,7 +122,7 @@ namespace EnronEmailSearch.Indexer
                 logger.LogInformation("Using cleaned emails from: {CleanedDir}", opts.OutputDirectory);
 
                 var indexStopwatch = System.Diagnostics.Stopwatch.StartNew();
-                int indexedCount = await indexer.IndexDirectoryAsync(opts.OutputDirectory);
+                var indexedCount = await indexer.IndexDirectoryAsync(opts.OutputDirectory);
                 indexStopwatch.Stop();
 
                 logger.LogInformation("Indexed {Count} emails in {Time}ms", 
