@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>enron-email-search-web</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <DockerfileContext>..</DockerfileContext>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="prometheus-net.AspNetCore" Version="8.1.0" />
+        <PackageReference Include="prometheus-net.AspNetCore.HealthChecks" Version="8.1.0" />
+        <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\EnronEmailSearch.Core\EnronEmailSearch.Core.csproj" />
+        <ProjectReference Include="..\EnronEmailSearch.Infrastructure\EnronEmailSearch.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>

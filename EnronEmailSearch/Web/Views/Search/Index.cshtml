@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Enron Email Search";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Enron Email Search</h1>
+    <p class="lead">Search through the Enron email dataset</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <form asp-action="Search" method="get" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control form-control-lg" placeholder="Search terms..." 
+                       required autofocus>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Search
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

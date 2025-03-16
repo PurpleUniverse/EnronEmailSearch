@@ -1,0 +1,25 @@
+﻿@model EnronEmailSearch.Web.Controllers.EmailPreviewViewModel
+@{
+    ViewData["Title"] = $"Preview: {Model.FileName}";
+}
+
+<div class="mb-4">
+    <h2>@Model.FileName</h2>
+    <div class="mb-3">
+        <a asp-action="Search" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Results
+        </a>
+        <a asp-action="Download" asp-route-id="@Model.FileId" class="btn btn-outline-primary">
+            <i class="bi bi-download"></i> Download
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        Email Content
+    </div>
+    <div class="card-body">
+        <pre class="email-content">@Model.Content</pre>
+    </div>
+</div>
