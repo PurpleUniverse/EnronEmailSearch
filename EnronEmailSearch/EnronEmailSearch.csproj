@@ -8,9 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.temp\.dockerignore</Link>
-      </Content>
       <Content Include="Core\Core.csproj" />
       <Content Include="Indexer\Indexer.csproj" />
       <Content Include="Infrastructure\Infrastructure.csproj" />

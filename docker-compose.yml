@@ -1,11 +1,9 @@
-﻿version: '3.8'
-
-services:
+﻿services:
   # Indexer service - for processing the Enron dataset
   indexer:
     build:
       context: .
-      dockerfile: EnronEmailSearch.Indexer/Dockerfile
+      dockerfile: EnronEmailSearch/Indexer/Dockerfile
     volumes:
       - ./enron_dataset:/app/enron_dataset
       - ./cleaned_emails:/app/cleaned_emails
@@ -24,7 +22,7 @@ services:
   webapp:
     build:
       context: .
-      dockerfile: EnronEmailSearch.Web/Dockerfile
+      dockerfile: EnronEmailSearch/Web/Dockerfile
     ports:
       - "8080:80"
       - "8443:443"

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EnronEmailSearch")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a2a9da2903836c2a37f2afbb2b8e4b59ef3e692a")]
 [assembly: System.Reflection.AssemblyProductAttribute("EnronEmailSearch")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EnronEmailSearch")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
