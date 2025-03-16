@@ -1,0 +1,88 @@
+﻿version: '3.8'
+
+services:
+  # Indexer service - for processing the Enron dataset
+  indexer:
+    build:
+      context: .
+      dockerfile: EnronEmailSearch.Indexer/Dockerfile
+    volumes:
+      - ./enron_dataset:/app/enron_dataset
+      - ./cleaned_emails:/app/cleaned_emails
+      - ./db:/app/db
+    command: --input /app/enron_dataset --output /app/cleaned_emails --db /app/db/enron_index.db
+    environment:
+      - DOTNET_ENVIRONMENT=Production
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 2G
+    restart: "no"  # Run once and exit
+
+  # Web application service
+  webapp:
+    build:
+      context: .
+      dockerfile: EnronEmailSearch.Web/Dockerfile
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      - ./db:/app/db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Data Source=/app/db/enron_index.db
+    depends_on:
+      - indexer
+    deploy:
+      replicas: 2  # X-axis scaling - horizontal duplication
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Load balancer for web application
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - webapp
+    restart: always
+
+  # Prometheus monitoring service
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    restart: always
+
+  # Grafana visualization
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - prometheus
+    restart: always
+
+volumes:
+  prometheus_data:
+  grafana_data:
