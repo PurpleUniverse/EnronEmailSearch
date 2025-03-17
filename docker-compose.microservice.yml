@@ -5,7 +5,7 @@ services:
   cleaner-service:
     build:
       context: .
-      dockerfile: EnronEmailSearch.Indexer/Dockerfile
+      dockerfile: EnronEmailSearch/Indexer/Dockerfile
       args:
         - SERVICE_TYPE=cleaner
     volumes:
@@ -20,7 +20,7 @@ services:
   indexer-service:
     build:
       context: .
-      dockerfile: EnronEmailSearch.Indexer/Dockerfile
+      dockerfile: EnronEmailSearch/Indexer/Dockerfile
       args:
         - SERVICE_TYPE=indexer
     volumes:
@@ -37,7 +37,7 @@ services:
   search-api:
     build:
       context: .
-      dockerfile: EnronEmailSearch.Web/Dockerfile
+      dockerfile: EnronEmailSearch/Web/Dockerfile
       args:
         - SERVICE_TYPE=api
     ports:
@@ -55,7 +55,7 @@ services:
   web-ui:
     build:
       context: .
-      dockerfile: EnronEmailSearch.Web/Dockerfile
+      dockerfile: EnronEmailSearch/Web/Dockerfile
       args:
         - SERVICE_TYPE=ui
     ports:

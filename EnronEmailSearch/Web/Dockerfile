@@ -5,18 +5,18 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["EnronEmailSearch.Web/EnronEmailSearch.Web.csproj", "EnronEmailSearch.Web/"]
-COPY ["EnronEmailSearch.Core/EnronEmailSearch.Core.csproj", "EnronEmailSearch.Core/"]
-COPY ["EnronEmailSearch.Infrastructure/EnronEmailSearch.Infrastructure.csproj", "EnronEmailSearch.Infrastructure/"]
-RUN dotnet restore "EnronEmailSearch.Web/EnronEmailSearch.Web.csproj"
+COPY ["EnronEmailSearch/Indexer/Indexer.csproj", "EnronEmailSearch/Indexer/"]
+COPY ["EnronEmailSearch/Core/Core.csproj", "EnronEmailSearch/Core/"]
+COPY ["EnronEmailSearch/Infrastructure/Infrastructure.csproj", "EnronEmailSearch/Infrastructure/"]
+RUN dotnet restore "EnronEmailSearch/Web/Web.csproj"
 COPY . .
-WORKDIR "/src/EnronEmailSearch.Web"
-RUN dotnet build "EnronEmailSearch.Web.csproj" -c Release -o /app/build
+WORKDIR "/src/EnronEmailSearch/Web"
+RUN dotnet build "Web.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "EnronEmailSearch.Web.csproj" -c Release -o /app/publish
+RUN dotnet publish "Web.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "EnronEmailSearch.Web.dll"]
+ENTRYPOINT ["dotnet", "Web.dll"]

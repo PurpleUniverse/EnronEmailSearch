@@ -20,8 +20,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\EnronEmailSearch.Core\EnronEmailSearch.Core.csproj" />
-        <ProjectReference Include="..\EnronEmailSearch.Infrastructure\EnronEmailSearch.Infrastructure.csproj" />
+        <ProjectReference Include="..\Core\Core.csproj" />
+        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
