@@ -1,28 +1,12 @@
 ﻿using System.Data.Common;
+using EnronEmailSearch.Core.Interfaces;
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Logging;
 using Polly;
-
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EnronEmailSearch.Infrastructure.Services
 {
-    public interface IResilienceService
-    {
-        /// <summary>
-        /// Execute a database operation with resilience policies applied
-        /// </summary>
-        Task<T> ExecuteDatabaseOperationAsync<T>(Func<CancellationToken, Task<T>> operation, CancellationToken cancellationToken = default);
-        
-        /// <summary>
-        /// Execute a file operation with resilience policies applied
-        /// </summary>
-        Task<T> ExecuteFileOperationAsync<T>(Func<CancellationToken, Task<T>> operation, CancellationToken cancellationToken = default);
-        
-        /// <summary>
-        /// Execute a search operation with resilience policies applied
-        /// </summary>
-        Task<T> ExecuteSearchOperationAsync<T>(Func<CancellationToken, Task<T>> operation, CancellationToken cancellationToken = default);
-    }
-    
     public class ResilienceService : IResilienceService
     {
         private readonly ILogger<ResilienceService> _logger;

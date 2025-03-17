@@ -1,7 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using EnronEmailSearch.Core.Interfaces;
 using EnronEmailSearch.Core.Models;
-using EnronEmailSearch.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -9,7 +8,7 @@ namespace EnronEmailSearch.Core.Services
 {
     public class EmailIndexer : IEmailIndexer
     {
-        private readonly EnronDbContext _dbContext;
+        private readonly DbContext _dbContext;
         private readonly ILogger<EmailIndexer> _logger;
         private static readonly HashSet<string> _stopWords = new(StringComparer.OrdinalIgnoreCase)
         {
@@ -22,7 +21,7 @@ namespace EnronEmailSearch.Core.Services
         // Regular expression to match valid words (alphanumeric)
         private static readonly Regex _wordRegex = new(@"\b[a-zA-Z0-9]+\b", RegexOptions.Compiled);
         
-        public EmailIndexer(EnronDbContext dbContext, ILogger<EmailIndexer> logger)
+        public EmailIndexer(DbContext dbContext, ILogger<EmailIndexer> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -39,7 +38,7 @@ namespace EnronEmailSearch.Core.Services
                 // Get or create file record
                 string relativePath = Path.GetFileName(filePath);
                 
-                var fileEntity = await _dbContext.Files
+                var fileEntity = await _dbContext.Set<EmailFile>()
                     .FirstOrDefaultAsync(f => f.FileName == relativePath, cancellationToken);
                 
                 if (fileEntity == null)
@@ -50,7 +49,7 @@ namespace EnronEmailSearch.Core.Services
                         Content = contentBytes
                     };
                     
-                    _dbContext.Files.Add(fileEntity);
+                    _dbContext.Set<EmailFile>().Add(fileEntity);
                     await _dbContext.SaveChangesAsync(cancellationToken);
                 }
                 
@@ -61,18 +60,18 @@ namespace EnronEmailSearch.Core.Services
                 foreach (var wordCount in wordCounts)
                 {
                     // Get or create word
-                    var word = await _dbContext.Words
+                    var word = await _dbContext.Set<Word>()
                         .FirstOrDefaultAsync(w => w.Text == wordCount.Key, cancellationToken);
                     
                     if (word == null)
                     {
                         word = new Word { Text = wordCount.Key };
-                        _dbContext.Words.Add(word);
+                        _dbContext.Set<Word>().Add(word);
                         await _dbContext.SaveChangesAsync(cancellationToken);
                     }
                     
                     // Create or update occurrence
-                    var occurrence = await _dbContext.Occurrences
+                    var occurrence = await _dbContext.Set<Occurrence>()
                         .FirstOrDefaultAsync(o => o.WordId == word.WordId && o.FileId == fileEntity.FileId, cancellationToken);
                     
                     if (occurrence == null)
@@ -83,7 +82,7 @@ namespace EnronEmailSearch.Core.Services
                             FileId = fileEntity.FileId,
                             Count = wordCount.Value
                         };
-                        _dbContext.Occurrences.Add(occurrence);
+                        _dbContext.Set<Occurrence>().Add(occurrence);
                     }
                     else
                     {
@@ -147,7 +146,7 @@ namespace EnronEmailSearch.Core.Services
                         byte[] contentBytes = await File.ReadAllBytesAsync(filePath, cancellationToken);
                         
                         // Get or create file record
-                        var fileEntity = await _dbContext.Files
+                        var fileEntity = await _dbContext.Set<EmailFile>()
                             .FirstOrDefaultAsync(f => f.FileName == relativePath, cancellationToken);
                         
                         if (fileEntity == null)
@@ -158,7 +157,7 @@ namespace EnronEmailSearch.Core.Services
                                 Content = contentBytes
                             };
                             
-                            _dbContext.Files.Add(fileEntity);
+                            _dbContext.Set<EmailFile>().Add(fileEntity);
                             await _dbContext.SaveChangesAsync(cancellationToken);
                         }
                         
@@ -166,18 +165,18 @@ namespace EnronEmailSearch.Core.Services
                         foreach (var wordCount in wordCounts)
                         {
                             // Get or create word
-                            var word = await _dbContext.Words
+                            var word = await _dbContext.Set<Word>()
                                 .FirstOrDefaultAsync(w => w.Text == wordCount.Key, cancellationToken);
                             
                             if (word == null)
                             {
                                 word = new Word { Text = wordCount.Key };
-                                _dbContext.Words.Add(word);
+                                _dbContext.Set<Word>().Add(word);
                                 await _dbContext.SaveChangesAsync(cancellationToken);
                             }
                             
                             // Create or update occurrence
-                            var occurrence = await _dbContext.Occurrences
+                            var occurrence = await _dbContext.Set<Occurrence>()
                                 .FirstOrDefaultAsync(o => o.WordId == word.WordId && o.FileId == fileEntity.FileId, cancellationToken);
                             
                             if (occurrence == null)
@@ -188,7 +187,7 @@ namespace EnronEmailSearch.Core.Services
                                     FileId = fileEntity.FileId,
                                     Count = wordCount.Value
                                 };
-                                _dbContext.Occurrences.Add(occurrence);
+                                _dbContext.Set<Occurrence>().Add(occurrence);
                             }
                             else
                             {
@@ -229,7 +228,7 @@ namespace EnronEmailSearch.Core.Services
             }
             
             // Find files containing these terms
-            var results = await _dbContext.Occurrences
+            var results = await _dbContext.Set<Occurrence>()
                 .Where(o => terms.Contains(o.Word.Text))
                 .GroupBy(o => new { o.FileId, o.File.FileName })
                 .Select(g => new SearchResult

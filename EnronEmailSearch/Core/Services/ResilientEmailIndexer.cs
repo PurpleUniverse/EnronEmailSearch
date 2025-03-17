@@ -1,6 +1,6 @@
 ﻿using EnronEmailSearch.Core.Interfaces;
-using EnronEmailSearch.Infrastructure.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EnronEmailSearch.Core.Services
 {
@@ -46,19 +46,6 @@ namespace EnronEmailSearch.Core.Services
                     return results;
                 },
                 cancellationToken);
-        }
-    }
-    
-    // Extension method to register resilient services
-    public static class ResilientServicesExtensions
-    {
-        public static IServiceCollection AddResilientServices(this IServiceCollection services)
-        {
-            // Register both the normal and resilient versions
-            services.AddTransient<EmailIndexer>();
-            services.AddTransient<IEmailIndexer, ResilientEmailIndexer>();
-            
-            return services;
         }
     }
 }

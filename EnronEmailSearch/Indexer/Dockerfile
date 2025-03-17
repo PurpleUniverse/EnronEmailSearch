@@ -3,11 +3,20 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["EnronEmailSearch/Indexer/Indexer.csproj", "EnronEmailSearch/Indexer/"]
+
+# Copy solution and project files first to restore dependencies
+COPY ["EnronEmailSearch.sln", "./"]
 COPY ["EnronEmailSearch/Core/Core.csproj", "EnronEmailSearch/Core/"]
 COPY ["EnronEmailSearch/Infrastructure/Infrastructure.csproj", "EnronEmailSearch/Infrastructure/"]
+COPY ["EnronEmailSearch/Indexer/Indexer.csproj", "EnronEmailSearch/Indexer/"]
+
+# Restore dependencies before copying the rest of the source code
 RUN dotnet restore "EnronEmailSearch/Indexer/Indexer.csproj"
+
+# Copy the rest of the source code
 COPY . .
+
+# Build the project
 WORKDIR "/src/EnronEmailSearch/Indexer"
 RUN dotnet build "Indexer.csproj" -c Release -o /app/build
 

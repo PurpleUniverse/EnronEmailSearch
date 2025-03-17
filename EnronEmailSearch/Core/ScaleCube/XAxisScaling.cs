@@ -1,4 +1,6 @@
-﻿namespace EnronEmailSearch.Core.ScaleCube
+﻿using Microsoft.Extensions.Logging;
+
+namespace EnronEmailSearch.Core.ScaleCube
 {
     /// <summary>
     /// X-axis: Horizontal Duplication (Cloning) implementation

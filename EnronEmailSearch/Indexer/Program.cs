@@ -4,6 +4,8 @@ using EnronEmailSearch.Core.Services;
 using EnronEmailSearch.Infrastructure.Data;
 using EnronEmailSearch.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace EnronEmailSearch.Indexer
