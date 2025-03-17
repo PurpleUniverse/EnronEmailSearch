@@ -10,12 +10,12 @@ namespace EnronEmailSearch.Infrastructure.Data
         {
         }
 
-        // Keep existing tables
+        // Base tables
         public DbSet<Word> Words { get; set; } = null!;
         public DbSet<EmailFile> Files { get; set; } = null!;
         public DbSet<Occurrence> Occurrences { get; set; } = null!;
 
-        // Add new tables
+        //Expanded tables from base model
         public DbSet<Contact> Contacts { get; set; } = null!;
         public DbSet<EmailRecipient> EmailRecipients { get; set; } = null!;
         public DbSet<Topic> Topics { get; set; } = null!;

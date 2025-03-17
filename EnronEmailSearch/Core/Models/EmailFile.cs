@@ -11,7 +11,7 @@ namespace EnronEmailSearch.Core.Models
         public string FileName { get; set; } = string.Empty;
         public byte[] Content { get; set; } = Array.Empty<byte>();
 
-        // Keep original navigation properties
+        // Navigation property
         public ICollection<Occurrence> Occurrences { get; set; } = new List<Occurrence>();
 
         // Add new navigation properties
