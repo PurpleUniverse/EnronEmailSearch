@@ -4139,24 +4139,31 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\dpetk\\.nuget\\packages\\": {}
+    "C:\\Users\\baba_\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\dpetk\\RiderProjects\\EnronEmailSearch\\EnronEmailSearch\\EnronEmailSearch.csproj",
+      "projectUniqueName": "C:\\Users\\baba_\\RiderProjects\\EnronEmailSearch\\EnronEmailSearch\\EnronEmailSearch.csproj",
       "projectName": "EnronEmailSearch",
-      "projectPath": "C:\\Users\\dpetk\\RiderProjects\\EnronEmailSearch\\EnronEmailSearch\\EnronEmailSearch.csproj",
-      "packagesPath": "C:\\Users\\dpetk\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\dpetk\\RiderProjects\\EnronEmailSearch\\EnronEmailSearch\\obj\\",
+      "projectPath": "C:\\Users\\baba_\\RiderProjects\\EnronEmailSearch\\EnronEmailSearch\\EnronEmailSearch.csproj",
+      "packagesPath": "C:\\Users\\baba_\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\baba_\\RiderProjects\\EnronEmailSearch\\EnronEmailSearch\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\dpetk\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\baba_\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -4233,7 +4240,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Users\\dpetk\\.dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Users\\baba_\\.dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
