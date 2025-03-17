@@ -17,39 +17,39 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = EnronEmailSearch
 build_property.RootNamespace = EnronEmailSearch
-build_property.ProjectDir = C:\Users\baba_\RiderProjects\EnronEmailSearch\EnronEmailSearch\
+build_property.ProjectDir = C:\Users\dpetk\RiderProjects\EnronEmailSearch\EnronEmailSearch\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\baba_\RiderProjects\EnronEmailSearch\EnronEmailSearch
+build_property.MSBuildProjectDirectory = C:\Users\dpetk\RiderProjects\EnronEmailSearch\EnronEmailSearch
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/baba_/RiderProjects/EnronEmailSearch/EnronEmailSearch/Web/Views/Shared/Error.cshtml]
+[C:/Users/dpetk/RiderProjects/EnronEmailSearch/EnronEmailSearch/Web/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = 
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/baba_/RiderProjects/EnronEmailSearch/EnronEmailSearch/Web/Views/Shared/_Layout.cshtml]
+[C:/Users/dpetk/RiderProjects/EnronEmailSearch/EnronEmailSearch/Web/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = 
 build_metadata.AdditionalFiles.TargetPath = V2ViXFZpZXdzXFNoYXJlZFxfTGF5b3V0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 build_metadata.AdditionalFiles.CssScope = b-cqphvuxbz5
 
-[C:/Users/baba_/RiderProjects/EnronEmailSearch/EnronEmailSearch/Web/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/dpetk/RiderProjects/EnronEmailSearch/EnronEmailSearch/Web/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = 
 build_metadata.AdditionalFiles.TargetPath = V2ViXFZpZXdzXFNoYXJlZFxfVmFsaWRhdGlvblNjcmlwdHNQYXJ0aWFsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/baba_/RiderProjects/EnronEmailSearch/EnronEmailSearch/Web/Views/Search/Index.cshtml]
+[C:/Users/dpetk/RiderProjects/EnronEmailSearch/EnronEmailSearch/Web/Views/Search/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = V2ViXFZpZXdzXFNlYXJjaFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/baba_/RiderProjects/EnronEmailSearch/EnronEmailSearch/Web/Views/Search/Preview.cshtml]
+[C:/Users/dpetk/RiderProjects/EnronEmailSearch/EnronEmailSearch/Web/Views/Search/Preview.cshtml]
 build_metadata.AdditionalFiles.TargetPath = V2ViXFZpZXdzXFNlYXJjaFxQcmV2aWV3LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/baba_/RiderProjects/EnronEmailSearch/EnronEmailSearch/Web/Views/Search/Search.cshtml]
+[C:/Users/dpetk/RiderProjects/EnronEmailSearch/EnronEmailSearch/Web/Views/Search/Search.cshtml]
 build_metadata.AdditionalFiles.TargetPath = V2ViXFZpZXdzXFNlYXJjaFxTZWFyY2guY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
